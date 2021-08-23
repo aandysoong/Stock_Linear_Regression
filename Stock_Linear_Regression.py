@@ -48,7 +48,7 @@ for epoch in range(nb_epochs+1):
 
 new_var =  torch.FloatTensor([[3]]) 
 pred_y = model(new_var) 
-print("predicted value for __ :", pred_y) 
+print("predicted value for 3 :", pred_y) 
 
 # data for plotting
 y_plot_list=[]
