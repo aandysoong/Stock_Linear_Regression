@@ -131,4 +131,51 @@ Now, we set up the nn module.
 model = nn.Linear(1,1)
 ```
 
-The "Linear" represents that we are conducting a linear regression model. The (1,1) represents that we have one set of x data and one set of y data
+The "Linear" represents that we are conducting a linear regression model. The (1,1) represents that we have one set of x data and one set of y data. Now, the optimizer.
+
+```python
+optimizer = torch.optim.SGD(model.parameters(), lr=0.00001) 
+```
+"torch.optim.SGD" establishes the optimizer as SGD, which is a type of optimizer. Others include Momentum and Adam. I just used SGD because this is a simple model and it doesn't really matter with optimizer we use. The learning rate here is extremely small; but that is true for any model. It is not always better if it is smaller though, so you need to find the best one for your model.
+
+Now, we will set up the gradient descent. I will first show all the code and then explain.
+
+```python
+# actual learning process
+nb_epochs = 100000
+for epoch in range(nb_epochs+1):
+
+    # H(x)
+    prediction = model(x_train)
+
+    # finding the cost
+    cost = F.mse_loss(prediction, y_train) 
+
+    # reset the gradient
+    optimizer.zero_grad()
+    cost.backward()
+    # update W and b
+    optimizer.step()
+```
+First, the "prediction = model(x_train)" part. This is where we make the hypothesis (or prediction in this case). In other words, prediction is the "y" part of a 
+
+y = wx + b 
+
+equation. The "model(x_train)" is the wx + b part. Since we defined model already, the whole line of code translates to y = wx + b.
+
+"cost = F.mse_loss(prediction, y_train) " is the part where the computer calculates the cost within the predicted value (aka prediction) and the actual y value (aka the y_train). "F.mse_loss" is the actual function where the calculation is made. Again, the reason why this is expressed simply is because the nn.Linear model provides us with all these great features.
+
+After getting the cost, the computer needs to then change the w and b variables so that they can repeat this process over and over again. This is where the three lines of "optimizer.zero_grad()", "cost.backward()", and "optimizer.step()". The first two codes reset the conditions and the third update W and b. 
+
+All of this code is put within a "for" code repeating 100,000 times. (That is where the "nb_epochs" comes in) Most machine learning programs repeat way more times but since this is a simple linear regression model, 100,000 times is enough. It will still take some time though, which is why we need a print system to tell us how much of the learning process has been complete.
+
+```python
+if epoch % 10000 == 0:
+        print('Epoch {:4d}/{} Cost: {:.6f}'.format(epoch, nb_epochs, cost.item()))
+        print(list(model.parameters()))
+```
+
+Every 10,000 time the computer repeats the process of learning, we will be printing epoch (the number of times the learning process has been complete, the cost, and the variables W and b. The first line of code in the if statement prints out the epoch and cost while the second line of code prints out the variables.
+
+After going through the number of epoch you have set, the computer will now be done with its learning. It will print out the final W and b values that they got and you will now have the best fit line for your data points. However, since I want to be able to visualize the graphs, I will use matplotlib to graph the datapoints and the graph.
+
