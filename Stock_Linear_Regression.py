@@ -50,11 +50,7 @@ new_var =  torch.FloatTensor([[3]])
 pred_y = model(new_var) 
 print("predicted value for 3 :", pred_y) 
 
-# data for plotting
 y_plot_list=[]
-w_final = float(list(model.parameters())[0].data.numpy()[0][0])
-b_final = float(list(model.parameters())[1].data.numpy()[0])
-
 for i in x_list:
     y_plot_list.append(float(model(torch.FloatTensor([[i]]))))
 
