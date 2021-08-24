@@ -56,7 +56,7 @@ w_final = float(list(model.parameters())[0].data.numpy()[0][0])
 b_final = float(list(model.parameters())[1].data.numpy()[0])
 
 for i in x_list:
-    y_plot_list.append(w_final*i[0] + b_final)
+    y_plot_list.append(float(model(torch.FloatTensor([[i]]))))
 
 # actual plotting
 plt.plot(x_train,y_plot_list)
