@@ -177,5 +177,94 @@ if epoch % 10000 == 0:
 
 Every 10,000 time the computer repeats the process of learning, we will be printing epoch (the number of times the learning process has been complete, the cost, and the variables W and b. The first line of code in the if statement prints out the epoch and cost while the second line of code prints out the variables.
 
-After going through the number of epoch you have set, the computer will now be done with its learning. It will print out the final W and b values that they got and you will now have the best fit line for your data points. However, since I want to be able to visualize the graphs, I will use matplotlib to graph the datapoints and the graph.
+After going through the number of epochs you have set, the computer will now be done with its learning. It will print out the final W and b values that they got and you will now have the best fit line for your data points. However, since I want to be able to visualize the graphs, I will use matplotlib to graph the datapoints and the linear graph.
 
+First, we plot the original points (the x_train and y_train). 
+
+```python
+plt.plot(x_train, y_train)
+```
+
+We then need to plot the linear graph, which we can do by plugging in x values to the equation we acquired.
+
+```python
+y_plot_list=[] # an empty list where we will store the graph y data
+for i in x_list:
+    y_plot_list.append(float(model(torch.FloatTensor([[i]]))))
+```
+This allows us to find the predicted value of every x_train value. Now we plot them.
+
+```python
+plt.plot(x_train,y_plot_list)
+plt.xlabel('Days')
+plt.ylabel('Value')
+plt.title('TSLA')
+plt.show()
+```
+
+The finished graph looks like this (at this current moment):
+
+![tsla](https://user-images.githubusercontent.com/70020467/130540399-e9cbfc4d-b8a0-411c-98de-4d72e51a1758.png)
+
+The best fit line looks about right to me.
+
+If you also want to predict the y value for any x value, you can also use model() for that.
+
+```python
+new_var =  torch.FloatTensor([[3]]) 
+pred_y = model(new_var) 
+print("predicted value for 3 :", pred_y)
+```
+That is how linear regression is modeled in Python. The full code looks like this.
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
+import yfinance as yf
+torch.manual_seed(1)
+
+tsla=yf.Ticker('tsla').history(period='365d')['Close']
+
+model = nn.Linear(1,1)
+
+y_list=[]
+for i in tsla:
+    y_list.append([i])
+y_train = torch.FloatTensor(y_list)
+
+x_list=[]
+for i in range(1,len(tsla)+1):
+    x_list.append([i])
+x_train = torch.FloatTensor(x_list)
+
+optimizer = torch.optim.SGD(model.parameters(), lr=0.00001) 
+
+nb_epochs = 100000
+for epoch in range(nb_epochs+1):
+    prediction = model(x_train)
+    cost = F.mse_loss(prediction, y_train) 
+    optimizer.zero_grad()
+    cost.backward()
+    optimizer.step()
+    if epoch % 10000 == 0:
+        print('Epoch {:4d}/{} Cost: {:.6f}'.format(epoch, nb_epochs, cost.item()))
+        print(list(model.parameters()))
+
+new_var =  torch.FloatTensor([[3]]) 
+pred_y = model(new_var) 
+print("predicted value for 3 :", pred_y) 
+
+y_plot_list=[]
+for i in x_list:
+    y_plot_list.append(float(model(torch.FloatTensor([[i]]))))
+
+plt.plot(x_train,y_plot_list)
+plt.plot(x_train, y_train)
+plt.xlabel('Days')
+plt.ylabel('Value')
+plt.title('TSLA')
+plt.show()
+```
+
+Thank you for reading!
