@@ -6,7 +6,8 @@ import yfinance as yf
 # all the neccessary inputs
 torch.manual_seed(1)
 
-# get the data that you want
+# hotfix
+# get the data you want
 tsla=yf.Ticker('tsla').history(period='365d')['Close']
 
 # set up the model and the training set 
