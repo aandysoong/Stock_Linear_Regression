@@ -24,12 +24,11 @@ x_train = torch.FloatTensor(x_list)
 
 optimizer = torch.optim.SGD(model.parameters(), lr=0.00001) 
 
-
 # actual learning process
 nb_epochs = 100000
 for epoch in range(nb_epochs+1):
 
-    # H(x) 계산
+    # H(x)
     prediction = model(x_train)
 
     # finding the cost
