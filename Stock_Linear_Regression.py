@@ -6,7 +6,6 @@ import yfinance as yf
 # all the neccessary inputs
 torch.manual_seed(1)
 
-# add new comment
 # get the data that you want
 tsla=yf.Ticker('tsla').history(period='365d')['Close']
 
